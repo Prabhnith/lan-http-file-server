@@ -1,5 +1,5 @@
 {
-  "name": "expressmusic",
+  "name": "lan-http-file-server",
   "version": "1.0.0",
   "description": "Simple ExpressJS app to server music for listening and downloading",
   "main": "app.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rishabhio/ExpressMusic.git"
+    "url": "git+https://github.com/Prabhnith/lan-http-file-server.git"
   },
   "keywords": [
     "expressjs",
@@ -18,12 +18,12 @@
     "in",
     "express"
   ],
-  "author": "@rishabhio",
-  "license": "MIT",
+  "author": "@prabhnith",
+  "license": "GNU",
   "bugs": {
-    "url": "https://github.com/rishabhio/ExpressMusic/issues"
+    "url": "https://github.com/Prabhnith/lan-http-file-server/issues"
   },
-  "homepage": "https://github.com/rishabhio/ExpressMusic#readme",
+  "homepage": "https://github.com/Prabhnith/lan-http-file-server",
   "dependencies": {
     "express": "^4.14.0",
     "socket-io": "^1.0.0"
