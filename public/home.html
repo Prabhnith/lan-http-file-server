@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="bootstrap.min.css" type="text/css">
+	<title> Express Music Server </title>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Fira+Sans|Roboto:300,400|Questrial|Satisfy">
+	<style>
+		body {
+		
+			padding: 30px;
+			background-image: url("./m5.jpg");;
+			text-align: center;
+			/*background-repeat:repeat;*/
+			/*position: absolute;*/
+		    background-size:cover;
+		}
+		.contents{
+			background: #fff;
+			padding: 20px;
+			margin: auto;
+			opacity: 0.7;
+			text-align: center;
+		}
+		.contents button{
+			width: 100px;
+			opacity: 0.9;
+			background: #000;
+		}
+		h4 ,h1{
+			color: #fff;
+			font-family: Roboto, Fira-Sans,Satisfy;
+		}
+		h2 {
+			color: #2e2e2e;
+			font-size: 28px;
+		}
+		a {
+			color: #2f2f2f;
+			font-size: 18px
+		}
+		
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script> 
+
+		<script>
+	window.addEventListener("load", function() {
+	const port = 3030;
+	socket = io(`ws://${location.hostname}:${port}/`);
+	socket.on('connect', function() {
+	console.log("connect");
+	});
+	socket.on("files", function(data) {
+		console.log(data.files);
+		
+		var songlist = data.files;
+		var listdiv = document.getElementById("songlist");
+		console.log(songlist, filename,listdiv);
+
+		for (var i =0;i< songlist.length ; i++) {
+			
+		var filename = songlist[i].split("/").slice(-1)[0];
+		var float=(i%2==0);
+		listdiv.innerHTML += ` <div class="w3-card-4" style="width:65%">
+					<div class="w3-container w3-center">
+						<h4> ${filename} </h4>
+						<audio controls>
+							  <source src="http://localhost:3030/music?id=${filename}" type="audio/mpeg">
+							</audio> 
+							<a href="http://localhost:3030/download?id=${filename}"> 
+								<button class="btn btn-default btn-sm">Download </button> 
+							</a>
+					</div>
+				</div>
+				<br> `;
+	}
+		// console.log(elem);
+		// listdiv.appendChild(elem);
+
+	});
+	socket.on('disconnect', function() {
+	console.log("disconnected");
+	});
+	});
+	</script>
+</head>
+<body>
+	<h1>  LAN MUSIC SERVER </h1>
+	<hr>
+	
+	
+<!-- 			<div class="col-md-4">
+				<h2> bawa.mp3 </h2>
+				
+				<a href="http://localhost:3030/music?id=bawa.mp3" target="_blank"> <button class="btn btn-success"> Play </button>	</a> <hr>
+				<a href="http://localhost:3030/download?id=bawa.mp3"  target="_blank"> <button class="btn btn-success"> Downnload </button> </a>
+			</div> -->
+
+			<div id="songlist" class="w3-container">
+	<!-- 			<div class="w3-card-4" style="width:60%">
+					<div class="w3-container w3-center">
+						<h3> bawa.mp3 </h3>
+						 	<audio controls>
+0							  <source src="http://localhost:3030/music?id=bawa.mp3" type="audio/mpeg">
+							</audio> 
+							<a href="http://localhost:3030/download?id=bawa.mp3"> 
+								<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-download"></span>Download </button> 
+							</a>
+					</div>
+				</div> -->
+				<br>
+			</div>
+	
+</body>
+</html>
+
+
+
