@@ -8,68 +8,70 @@
 		<style>
 			body {
 				padding: 30px;
-				background-image: url("./m5.jpg");;
+				background-image: url("./m5.jpg");
 				text-align: center;
-			background-size:cover;
+				background-size:cover;
 			}
-			.contents{
-				background: #fff;
-				padding: 20px;
-				margin: auto;
-				opacity: 0.7;
-				text-align: center;
-			}
-			.contents button{
-				width: 100px;
-				opacity: 0.9;
-				background: #000;
-			}
-			h4 ,h1{
+			h6 ,h1, h4{
 				color: #fff;
 				font-family: Roboto, Fira-Sans,Satisfy;
-			}
-			h2 {
-				color: #2e2e2e;
-				font-size: 28px;
-			}
-			a {
-				color: #2f2f2f;
-				font-size: 18px
-			}
-			
+			}			
 		</style>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
 		<script>
 		window.addEventListener("load", function() {
-		const port = 3030;
-		socket = io(`ws://${location.hostname}:${port}/`);
-		socket.on('connect', function() {
-		console.log("connect");
-		});
-		socket.on("files", function(data) {
-			console.log(data.files);
-			
-			var songlist = data.files;
-			var listdiv = document.getElementById("songlist");
-			console.log(songlist, filename,listdiv);
-			for (var i =0;i< songlist.length ; i++) {
-				
-			var filename = songlist[i].split("/").slice(-1)[0];
-			var float=(i%2==0);
-			listdiv.innerHTML += ` <div class="w3-card-4" style="width:65%">
-							<div class="w3-container w3-center">
-									<h4> ${filename} </h4>
-									<audio controls>
-											<source src="http://localhost:3030/music?id=${filename}" type="audio/mpeg">
-										</audio>
-										<a href="http://localhost:3030/download?id=${filename}">
-												<button class="btn btn-default btn-sm">Download </button>
-										</a>
-							</div>
+			const port = 3030;
+			let rendered=false;
+			socket = io(`ws://${location.hostname}:${port}/`);
+			let status = document.getElementById("status");
+			socket.on('connect', function() {
+				console.log("connect");
+				status.innerText = "Getting files...";
+			});
+			socket.on("files", function(data) {
+				status.innerText = "";
+				console.log(data);
+
+			let songdiv = document.getElementById("songlist");
+			if(!rendered){
+			for (let i = 0; i < data.musicFiles.length ; i++) {
+					let filename = data.musicFiles[i].split("/").slice(-1)[0];
+					let fileExt = filename.split(".").pop() //like pdf, mp3 etc without .
+					songdiv.innerHTML += ` <div class="w3-card-4" style="width:55%;">
+					<div class="w3-container w3-center" style="margin:2px;">
+							<h6> ${filename} </h6>
+							<audio controls>
+									<source src="http://${location.hostname}:${port}/music?id=${filename}" type="audio/${fileExt}">
+								</audio>
+								<a href="http://${location.hostname}:${port}/download?id=${filename}">
+										<button class="btn btn-default btn-sm">Download </button>
+								</a>
+						</div>
 					</div>
-					<br> `;
-		}
-		});
+					`;
+				}
+				// let videodiv = document.getElementById("videolist");
+				// for(let i=0;i<data.videoFiles.length ; i++){
+				// 	let filename = data.videoFiles[i].split("/").slice(-1)[0];
+				// 	let fileExt = filename.split(".").pop() //like pdf, mp3 etc without .
+
+				// 		videodiv.innerHTML += ` <div class="w3-card-4" style="width:55%;">
+				// 			<div class="w3-container w3-center style=margin:2px;">
+				// 			<h6> ${filename} </h6>
+				// 			<video width="450" height="auto" controls>
+				// 				<source src="http://${location.hostname}:${port}/music?id=${encodeURI(filename)}" type="video/mp4">
+				// 				Your browser does not support the video tag.
+				// 			</video>
+				// 				<a href="http://${location.hostname}:${port}/download?id=${filename}">
+				// 						<button class="btn btn-default btn-sm">Download </button>
+				// 				</a>
+				// 			</div>
+				// 			</div>
+				// 			 `;
+				// 	}
+					rendered =!rendered;
+				};
+			});
 		socket.on('disconnect', function() {
 		console.log("disconnected");
 		});
@@ -77,8 +79,17 @@
 		</script>
 	</head>
 	<body>
-		<h1>  LAN MUSIC SERVER </h1>
+		<h4>  LAN MUSIC SERVER </h4>
 		<hr>
+		<h3 id="status"></h3>
 		<div id="songlist" class="w3-container"><br></div>
+		
+		<!-- <h5>Videos</h5>
+		<div id="videolist" class="w3-container"><br>
+			<video width="320" height="240" controls>
+				<source src="http://localhost:3030/music?id=video.mp4" type="video/mp4">
+				Your browser does not support the video tag.
+			</video>
+		</div> -->
 	</body>
 </html>
